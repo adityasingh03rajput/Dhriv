@@ -34,7 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Blur screen heavily when window loses focus (blocks Snipping Tool and background screen recorders)
+    // Guard: don't blur if the user just tapped the mobile menu button
+    let menuBtnTapped = false;
     window.addEventListener('blur', () => {
+        if (menuBtnTapped) { menuBtnTapped = false; return; }
         document.body.style.filter = 'blur(30px) grayscale(100%)';
         document.body.style.opacity = '0.05';
     });
@@ -109,16 +112,22 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- Mobile Sidebar Toggle ---
     const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+    }
+
     if (mobileMenuBtn && sidebarOverlay) {
-        mobileMenuBtn.addEventListener('click', () => {
-            sidebar.classList.add('open');
-            sidebarOverlay.classList.add('active');
-        });
-        
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            sidebarOverlay.classList.remove('active');
-        });
+        // Set flag before blur fires so we can ignore it
+        mobileMenuBtn.addEventListener('touchstart', () => { menuBtnTapped = true; }, { passive: true });
+        mobileMenuBtn.addEventListener('click', openSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
     }
     // -------------------------
     
@@ -377,9 +386,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 heading.scrollIntoView({ behavior: 'smooth' });
                 
-                // Close sidebar on mobile
-                if(window.innerWidth <= 900) {
-                    sidebar.classList.remove('open');
+                // Close sidebar on mobile (also hide overlay)
+                if (window.innerWidth <= 900) {
+                    closeSidebar();
                 }
             });
             
