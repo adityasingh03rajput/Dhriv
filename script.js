@@ -222,8 +222,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const okayBtn = document.getElementById('okay-btn');
             if (okayBtn) {
                 okayBtn.addEventListener('click', () => {
-                    alert("Send your payment screenshot to @adityasingh03_rajput on Instagram to receive your 4-digit unlock code.");
-                    window.open('https://www.instagram.com/adityasingh03_rajput', '_blank');
+                    const msg = "Hey i ve paid give me my code .";
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(msg).catch(() => {});
+                    }
+                    // Try Instagram DM shortlink first, fallback to profile page
+                    window.location.href = 'https://ig.me/m/adityasingh03_rajput';
                 });
             }
             const unlockBtn = document.getElementById('unlock-btn');
