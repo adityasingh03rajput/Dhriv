@@ -213,7 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(msg).catch(() => {});
                     }
-                    window.open('https://www.instagram.com/adityasingh03_rajput', '_blank');
+                    // Deep link to open installed Instagram App directly
+                    window.location.href = 'instagram://user?username=adityasingh03_rajput';
+                    // Fallback to web if Instagram App is not installed
+                    setTimeout(() => {
+                        window.location.href = 'https://www.instagram.com/adityasingh03_rajput';
+                    }, 1000);
                 });
             }
             const unlockBtn = document.getElementById('unlock-btn');
