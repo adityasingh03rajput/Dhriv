@@ -202,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div id="qr-container" style="display: flex; flex-direction: column; align-items: center;">
                                 <img id="upi-qr" src="" alt="UPI QR" style="width: 180px; height: 180px; border-radius: 10px; border: 2px solid var(--accent-primary); margin-bottom: 1rem; background: white; padding: 5px;">
                                 <a id="upi-link" href="#" class="glass-btn" style="text-decoration: none; font-size: 0.9rem; padding: 0.5rem 1rem;">Pay via UPI App</a>
+                                <button id="okay-btn" class="glass-btn" style="margin-top: 1rem; width: auto; padding: 0.6rem 2rem; border-color: #e1306c; color: #e1306c;">Okay</button>
                             </div>
                             <p style="font-size: 0.85rem; color: #888; margin-top: 1.5rem;">After payment, send a screenshot to the author to receive your unlock code.</p>
                         </div>
@@ -218,6 +219,13 @@ document.addEventListener('DOMContentLoaded', () => {
         applyStoryEffects();
         
         if (!isUnlocked && lockedUIHtml !== '') {
+            const okayBtn = document.getElementById('okay-btn');
+            if (okayBtn) {
+                okayBtn.addEventListener('click', () => {
+                    alert("Send your payment screenshot to @adityasingh03_rajput on Instagram to receive your 4-digit unlock code.");
+                    window.open('https://www.instagram.com/adityasingh03_rajput', '_blank');
+                });
+            }
             const unlockBtn = document.getElementById('unlock-btn');
             const unlockInput = document.getElementById('unlock-code');
             const errorEl = document.getElementById('unlock-error');
