@@ -33,19 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Blur screen when window loses focus (anti-screenshot on desktop only)
-    // NOTE: Skipped on mobile — window.blur fires constantly on touch devices
-    //       causing the page to go black on every tap, breaking normal use.
-    if (window.innerWidth > 900) {
-        window.addEventListener('blur', () => {
-            document.body.style.filter = 'blur(30px) grayscale(100%)';
-            document.body.style.opacity = '0.05';
-        });
-        window.addEventListener('focus', () => {
-            document.body.style.filter = 'none';
-            document.body.style.opacity = '1';
-        });
-    }
     // --------------------------------------------
 
     const readerContent = document.getElementById('reader-content');
@@ -226,8 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(msg).catch(() => {});
                     }
-                    // Try Instagram DM shortlink first, fallback to profile page
-                    window.location.href = 'https://ig.me/m/adityasingh03_rajput';
+                    window.open('https://www.instagram.com/adityasingh03_rajput', '_blank');
                 });
             }
             const unlockBtn = document.getElementById('unlock-btn');
