@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHRAP - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-panel: #1e1e1e;
+            --text-main: #e0e0e0;
+            --accent-primary: #ff3366;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-primary);
+        }
+        .container {
+            background: var(--bg-panel);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        button {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: bold;
+            transition: transform 0.2s, background 0.2s;
+            margin: 1rem 0;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            background: #ff1a53;
+        }
+        .code-display {
+            font-size: 3rem;
+            letter-spacing: 0.5rem;
+            font-weight: 800;
+            margin: 1.5rem 0;
+            color: #fff;
+            background: #000;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+        }
+        .codes-list {
+            margin-top: 3rem;
+            text-align: left;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        th {
+            text-align: left;
+            color: var(--accent-primary);
+        }
+        .status-used { color: #ff3366; }
+        .status-active { color: #00e676; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>SHRAP Admin</h1>
+        <p>Generate single-use 4-digit unlock codes for premium chapters.</p>
+        
+        <button id="generate-btn">Generate New Code</button>
+        
+        <div id="code-result" style="display: none;">
+            <p>Your new one-time code is:</p>
+            <div class="code-display" id="new-code">----</div>
+        </div>
+        
+        <div class="codes-list">
+            <h3>Previously Generated Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Status</th>
+                        <th>Generated</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="codes-table-body">
+                    <!-- Loaded via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function fetchCodes() {
+            try {
+                const res = await fetch('/api/admin/codes');
+                const data = await res.json();
+                if (data.success) {
+                    const tbody = document.getElementById('codes-table-body');
+                    tbody.innerHTML = '';
+                    
+                    // Convert object to array and sort by generated date
+                    const codesArray = Object.keys(data.codes).map(code => ({
+                        code,
+                        ...data.codes[code]
+                    })).sort((a, b) => new Date(b.generatedAt) - new Date(a.generatedAt));
+                    
+                    codesArray.forEach(item => {
+                        const tr = document.createElement('tr');
+                        
+                        let statusText = item.used ? 'Used' : 'Unused';
+                        let statusClass = item.used ? 'status-used' : 'status-active';
+                        if (item.revoked) {
+                            statusText = 'Revoked';
+                            statusClass = 'status-used';
+                        }
+                        
+                        const date = new Date(item.generatedAt).toLocaleString();
+                        
+                        let actionHtml = '';
+                        if (!item.revoked) {
+                            actionHtml = `<button onclick="revokeCode('${item.code}')" style="margin: 0; padding: 0.4rem 0.8rem; font-size: 0.8rem; background: #555;">Revoke</button>`;
+                        }
+                        
+                        tr.innerHTML = `
+                            <td><strong>${item.code}</strong></td>
+                            <td class="${statusClass}">${statusText}</td>
+                            <td>${date}</td>
+                            <td>${actionHtml}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                console.error("Failed to fetch codes:", err);
+            }
+        }
+        
+        async function revokeCode(code) {
+            if (!confirm(`Are you sure you want to revoke code ${code}?`)) return;
+            try {
+                const res = await fetch('/api/admin/revoke', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    fetchCodes();
+                } else {
+                    alert(data.message || 'Failed to revoke code.');
+                }
+            } catch (err) {
+                alert('Error connecting to server.');
+            }
+        }
+
+        document.getElementById('generate-btn').addEventListener('click', async () => {
+            try {
+                const res = await fetch('/api/admin/generate', { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('code-result').style.display = 'block';
+                    document.getElementById('new-code').innerText = data.code;
+                    fetchCodes();
+                }
+            } catch (err) {
+                alert("Failed to generate code. Is the server running?");
+            }
+        });
+
+        // Initial load
+        fetchCodes();
+    </script>
+</body>
+</html>

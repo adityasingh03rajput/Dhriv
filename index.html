@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHRAP (शराप) - AI Indian Manga</title>
+    <meta name="description" content="Read SHRAP (शराप), an AI-generated Indian Manga exploring the story of Dhriv.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cinzel:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar Overlay for Mobile -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+        
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-title" style="font-family: 'Cinzel', serif;">SHRAP</div>
+                <div class="logo-subtitle">Curse of Father</div>
+                <button id="map-btn" class="glass-btn" style="margin-top: 1.5rem;">
+                    <span class="icon">🗺️</span> Explore Map
+                </button>
+            </div>
+            <div class="toc-container">
+                <h3>Table of Contents</h3>
+                <ul id="toc-list">
+                    <!-- TOC injected by JS -->
+                </ul>
+            </div>
+            <div class="sidebar-footer">
+                <button id="spotlight-toggle" class="glass-btn" style="margin-bottom: 0.5rem; border-color: #ff3366; color: #ff3366;">
+                    <span class="icon">👁️</span> Cursed Spotlight
+                </button>
+                <button id="theme-toggle" class="glass-btn">
+                    <span class="icon">🌙</span> Toggle Theme
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="main-content">
+            <header class="top-nav">
+                <button id="mobile-menu-btn" class="menu-btn">☰</button>
+                <div class="reading-progress-container">
+                    <div id="reading-progress" class="reading-progress"></div>
+                </div>
+            </header>
+            
+            <div class="content-wrapper">
+                <div class="hero-section">
+                    <!-- 3D Rotating Stone Container -->
+                    <div id="stone-canvas-container"></div>
+                    <h1 class="story-title">SHRAP</h1>
+                    <p class="story-author">Curse of Father</p>
+                </div>
+                
+                <article id="reader-content" class="markdown-body">
+                    <div class="loader">Loading Story...</div>
+                </article>
+            </div>
+        </main>
+
+        <!-- World Map Modal -->
+        <div id="map-modal" class="map-modal">
+            <div class="map-close" id="map-close">&times;</div>
+            <h2 class="map-title">The World of SHRAP</h2>
+            
+            <div class="map-container">
+                <!-- Abstract stylized background (CSS) -->
+                <div class="map-bg"></div>
+                
+                <!-- Map Nodes -->
+                <div class="map-node" id="node-village" style="top: 55%; left: 25%;">
+                    <div class="node-dot"></div>
+                    <span class="node-label">The Unnamed Village</span>
+                </div>
+                
+                <div class="map-node" id="node-peepal" style="top: 75%; left: 50%;">
+                    <div class="node-dot"></div>
+                    <span class="node-label">Peepal Kalari</span>
+                </div>
+                
+                <div class="map-node" id="node-sarvya" style="top: 45%; left: 75%;">
+                    <div class="node-dot"></div>
+                    <span class="node-label">Sarvya Ghati</span>
+                </div>
+                
+                <div class="map-node" id="node-kripal-ghati" style="top: 25%; left: 50%;">
+                    <div class="node-dot"></div>
+                    <span class="node-label">Kripal Ghati</span>
+                </div>
+                
+                <!-- Info Panel -->
+                <div id="map-info-panel" class="map-info-panel">
+                    <h3 id="info-title">Select a location</h3>
+                    <p id="info-desc">Explore the dark and tragic lands of Dhriv's story.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Spotlight Overlay -->
+    <div id="spotlight-overlay"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
