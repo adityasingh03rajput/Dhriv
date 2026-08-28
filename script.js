@@ -33,19 +33,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Blur screen heavily when window loses focus (blocks Snipping Tool and background screen recorders)
-    // Guard: don't blur if the user just tapped the mobile menu button
-    let menuBtnTapped = false;
-    window.addEventListener('blur', () => {
-        if (menuBtnTapped) { menuBtnTapped = false; return; }
-        document.body.style.filter = 'blur(30px) grayscale(100%)';
-        document.body.style.opacity = '0.05';
-    });
-
-    window.addEventListener('focus', () => {
-        document.body.style.filter = 'none';
-        document.body.style.opacity = '1';
-    });
+    // Blur screen when window loses focus (anti-screenshot on desktop only)
+    // NOTE: Skipped on mobile — window.blur fires constantly on touch devices
+    //       causing the page to go black on every tap, breaking normal use.
+    if (window.innerWidth > 900) {
+        window.addEventListener('blur', () => {
+            document.body.style.filter = 'blur(30px) grayscale(100%)';
+            document.body.style.opacity = '0.05';
+        });
+        window.addEventListener('focus', () => {
+            document.body.style.filter = 'none';
+            document.body.style.opacity = '1';
+        });
+    }
     // --------------------------------------------
 
     const readerContent = document.getElementById('reader-content');
@@ -124,10 +124,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (mobileMenuBtn && sidebarOverlay) {
-        // Set flag before blur fires so we can ignore it
-        mobileMenuBtn.addEventListener('touchstart', () => { menuBtnTapped = true; }, { passive: true });
-        mobileMenuBtn.addEventListener('click', openSidebar);
+        // Use both touchend and click for maximum reliability on mobile
+        let touchHandled = false;
+        mobileMenuBtn.addEventListener('touchend', (e) => {
+            e.preventDefault(); // prevent ghost click
+            touchHandled = true;
+            openSidebar();
+        }, { passive: false });
+        mobileMenuBtn.addEventListener('click', () => {
+            if (touchHandled) { touchHandled = false; return; } // already handled by touch
+            openSidebar();
+        });
         sidebarOverlay.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            closeSidebar();
+        }, { passive: false });
     }
     // -------------------------
     

@@ -227,10 +227,17 @@ body.spotlight-active::after {
     border: none;
     color: var(--text-main);
     font-size: 2rem;
-    padding: 0.5rem 1rem;
-    margin-left: -1rem; /* Adjust for larger hitbox padding */
+    /* Larger tap target for mobile */
+    padding: 1rem 1.5rem;
+    margin-left: -1.5rem;
     cursor: pointer;
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-width: 56px;
+    min-height: 56px;
+    display: none;
+    align-items: center;
+    justify-content: center;
 }
 
 .reading-progress-container {
@@ -440,7 +447,7 @@ body.spotlight-active::after {
     }
     
     .menu-btn {
-        display: block;
+        display: flex;
     }
     
     .story-title {
@@ -448,7 +455,7 @@ body.spotlight-active::after {
     }
     
     .content-wrapper {
-        padding: 2rem 1.5rem;
+        padding: 5rem 1.5rem 4rem; /* account for fixed top-nav on mobile */
     }
 }
 
