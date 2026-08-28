@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: shrap-manga-reader
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: ADMIN_USER
+        sync: false
+      - key: ADMIN_PASS
+        sync: false
