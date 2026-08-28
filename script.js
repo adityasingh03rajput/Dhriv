@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 unlockBtn.innerText = "Unlocking...";
                 
                 try {
-                    const res = await fetch('/api/unlock', {
+                    const res = await fetch('https://dhriv.onrender.com/api/unlock', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ code })
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.removeItem('unlocked_code');
                 } else {
                     try {
-                        const res = await fetch('/api/verify', {
+                        const res = await fetch('https://dhriv.onrender.com/api/verify', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ code })

@@ -121,7 +121,7 @@
     <script>
         async function fetchCodes() {
             try {
-                const res = await fetch('/api/admin/codes');
+                const res = await fetch('https://dhriv.onrender.com/api/admin/codes');
                 const data = await res.json();
                 if (data.success) {
                     const tbody = document.getElementById('codes-table-body');
@@ -167,7 +167,7 @@
         async function revokeCode(code) {
             if (!confirm(`Are you sure you want to revoke code ${code}?`)) return;
             try {
-                const res = await fetch('/api/admin/revoke', {
+                const res = await fetch('https://dhriv.onrender.com/api/admin/revoke', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ code })
@@ -185,7 +185,7 @@
 
         document.getElementById('generate-btn').addEventListener('click', async () => {
             try {
-                const res = await fetch('/api/admin/generate', { method: 'POST' });
+                const res = await fetch('https://dhriv.onrender.com/api/admin/generate', { method: 'POST' });
                 const data = await res.json();
                 if (data.success) {
                     document.getElementById('code-result').style.display = 'block';
