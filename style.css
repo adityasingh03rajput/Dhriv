@@ -115,7 +115,7 @@ body.spotlight-active::after {
     display: flex;
     flex-direction: column;
     padding: 2rem 0;
-    z-index: 100;
+    z-index: 400; /* Highest: always on top of overlay (300), spotlight (200), nav (30) */
     transition: var(--transition);
 }
 
@@ -203,9 +203,8 @@ body.spotlight-active::after {
     position: fixed;
     top: 0; left: 300px; right: 0; bottom: 0;
     pointer-events: none;
-    /* Heavy burned edges fading to transparent center */
     box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.95), inset 0 0 60px rgba(255, 69, 0, 0.05);
-    z-index: 40;
+    z-index: 10; /* Above content, below nav */
 }
 
 .top-nav {
@@ -213,7 +212,7 @@ body.spotlight-active::after {
     top: 0; left: 0; width: 100vw;
     height: 60px;
     background-color: var(--bg-panel);
-    z-index: 80; /* Below sidebar overlay (90), but above content (40) */
+    z-index: 30; /* Above content and vignette, below modals/sidebar */
     display: flex;
     align-items: center;
     padding: 0 2rem;
@@ -278,7 +277,7 @@ body.spotlight-active::after {
     margin-bottom: -20px;
     cursor: grab;
     position: relative;
-    z-index: 999999; /* Sit above all overlays (spotlight, scanlines, etc) */
+    z-index: 5; /* Above story text, but BELOW sidebar/overlay/nav */
 }
 
 #stone-canvas-container:active {
@@ -528,7 +527,7 @@ body.spotlight-active::after {
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.9);
-    z-index: 1000;
+    z-index: 100; /* Above nav (30), below sidebar (400) */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -704,7 +703,7 @@ body.spotlight-active::after {
     right: 0;
     bottom: 0;
     pointer-events: none;
-    z-index: 99998; /* just below scanlines */
+    z-index: 200; /* Above content and nav, below sidebar overlay (300) */
     opacity: 0;
     transition: opacity 0.5s ease, background 0.5s ease;
 }
@@ -734,7 +733,7 @@ body[class*="spotlight-"]::after {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0,0,0,0.8);
-    z-index: 90;
+    z-index: 300; /* Above everything except the sidebar itself */
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
@@ -762,7 +761,7 @@ body[class*="spotlight-"]::after {
         width: 280px; 
         left: 0;
         transform: translateX(-100%); 
-        z-index: 100;
+        z-index: 400; /* Always highest */
         transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
     .sidebar.open {
@@ -790,7 +789,7 @@ body[class*="spotlight-"]::after {
     .markdown-body p { margin-bottom: 1.25rem; }
     
     /* Sidebar scales dynamically */
-    .sidebar { width: 85vw; left: 0; transform: translateX(-100%); padding: 1rem 0; }
+    .sidebar { width: 85vw; left: 0; transform: translateX(-100%); padding: 1rem 0; z-index: 400; }
     .sidebar.open { transform: translateX(0) !important; }
     
     .logo-title { font-size: clamp(2rem, 10vw, 3.5rem); }
